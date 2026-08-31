@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:maui_app"
+             x:Class="maui_app.MainPage">
+
+<ContentPage.Resources>
+    <Style x:Key="SquareImage" TargetType="Image">
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="VerticalOptions" Value="Fill"/>
+        <Style.Behaviors>
+            <local:SquareBehavior/>
+        </Style.Behaviors>
+    </Style>
+</ContentPage.Resources>
+
+    <Grid Padding="20, 10, 20, 0" BackgroundColor="LightCoral" RowDefinitions="Auto,*,Auto">
+        
+        <BoxView Grid.Row="0" BackgroundColor="LightBlue"/>
+        <!-- Menu de filtre -->
+        <HorizontalStackLayout x:Name="FilterMenu"
+                               Grid.Row="0" Spacing="10" 
+                               Margin="0, 10" 
+                               HorizontalOptions="Center"
+                               IsVisible="False">
+            <Button Text="Tous" Clicked="OnAllClicked"/>
+            <Button Text="Bus" Clicked="OnBusClicked"/>
+            <Button Text="Tram" Clicked="OnTramClicked"/>
+            <Button Text="Métro" Clicked="OnMetroClicked"/>
+        </HorizontalStackLayout>
+        
+        <BoxView Grid.Row="1" BackgroundColor="LightGreen"/>
+        <!-- Grille de lignes -->
+        <ScrollView x:Name="LinesView"
+                    Grid.Row="1" BackgroundColor="AliceBlue"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    Margin="0"
+                    Orientation="Vertical"
+                    IsVisible="False">
+
+            <CollectionView ItemsSource="{Binding DisplayedLines}">
+                <CollectionView.ItemsLayout>
+                    <GridItemsLayout Orientation="Vertical"
+                                      Span="6"
+                                      HorizontalItemSpacing="10"
+                                      VerticalItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Image Source="{Binding ImageSource}"
+                               Aspect="AspectFill"
+                               Style="{StaticResource SquareImage}"/>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+        
+        <ScrollView x:Name="FavorisView"
+                    Grid.Row="1"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    IsVisible="True">
+            <Label Text="Tes lignes favorites ici" HorizontalOptions="Center"/>
+        </ScrollView>
+        
+        <BoxView Grid.Row="2" BackgroundColor="LightBlue"/>
+        <HorizontalStackLayout Grid.Row="2" Spacing="10" Margin="0, 10, 0, 5" HorizontalOptions="Center">
+            <Button Text="Fav" Clicked="OnFavClicked"/>
+            <Button Text="Lignes" Clicked="OnLignesClicked"/>
+        </HorizontalStackLayout>
+        
+    </Grid>
+</ContentPage>
