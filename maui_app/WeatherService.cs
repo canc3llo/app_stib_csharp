@@ -12,12 +12,10 @@ public class WeatherService
         try
         {
             var result = await _httpClient.GetFromJsonAsync<WeatherResponse>(Url);
-            System.Diagnostics.Debug.WriteLine("Météo récupérée avec succès !");
             return result;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Erreur météo : {ex.Message}");
             return null;
         }
     }

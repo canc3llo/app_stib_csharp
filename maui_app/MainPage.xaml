@@ -14,62 +14,89 @@
     </Style>
 </ContentPage.Resources>
 
-    <Grid Padding="20, 10, 20, 0" BackgroundColor="LightCoral" RowDefinitions="Auto,*,Auto">
-        
-        <BoxView Grid.Row="0" BackgroundColor="LightBlue"/>
-        <!-- Menu de filtre -->
-        <HorizontalStackLayout x:Name="FilterMenu"
-                               Grid.Row="0" Spacing="10" 
-                               Margin="0, 10" 
-                               HorizontalOptions="Center"
-                               IsVisible="False">
-            <Button Text="Tous" Clicked="OnAllClicked"/>
-            <Button Text="Bus" Clicked="OnBusClicked"/>
-            <Button Text="Tram" Clicked="OnTramClicked"/>
-            <Button Text="Métro" Clicked="OnMetroClicked"/>
-        </HorizontalStackLayout>
-        
-        <BoxView Grid.Row="1" BackgroundColor="LightGreen"/>
-        <!-- Grille de lignes -->
-        <ScrollView x:Name="LinesView"
-                    Grid.Row="1" BackgroundColor="AliceBlue"
-                    HorizontalOptions="Fill"
-                    VerticalOptions="Fill"
-                    Margin="0"
-                    Orientation="Vertical"
-                    IsVisible="False">
+    <Grid Padding="20, 10, 20, 0" RowDefinitions="*,Auto">
+        <Grid x:Name="LinesGrid" Grid.Row="0" IsVisible="False" Padding="0" BackgroundColor="LightCoral" RowDefinitions="Auto,*">
 
-            <CollectionView ItemsSource="{Binding DisplayedLines}">
-                <CollectionView.ItemsLayout>
-                    <GridItemsLayout Orientation="Vertical"
-                                      Span="6"
-                                      HorizontalItemSpacing="10"
-                                      VerticalItemSpacing="10"/>
-                </CollectionView.ItemsLayout>
+            <BoxView Grid.Row="0" BackgroundColor="LightBlue"/>
+            <!-- Menu de filtre -->
+            <HorizontalStackLayout x:Name="FilterMenu"
+                                   Grid.Row="0" Spacing="10"
+                                   Margin="0, 10"
+                                   HorizontalOptions="Center">
+                <Button Text="Tous" Clicked="OnAllClicked"/>
+                <Button Text="Bus" Clicked="OnBusClicked"/>
+                <Button Text="Tram" Clicked="OnTramClicked"/>
+                <Button Text="Métro" Clicked="OnMetroClicked"/>
+            </HorizontalStackLayout>
 
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Image Source="{Binding ImageSource}"
-                               Aspect="AspectFill"
-                               Style="{StaticResource SquareImage}"/>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
-        
-        <ScrollView x:Name="FavorisView"
-                    Grid.Row="1"
-                    HorizontalOptions="Fill"
-                    VerticalOptions="Fill"
-                    IsVisible="True">
-            <Label Text="Tes lignes favorites ici" HorizontalOptions="Center"/>
-        </ScrollView>
-        
-        <BoxView Grid.Row="2" BackgroundColor="LightBlue"/>
-        <HorizontalStackLayout Grid.Row="2" Spacing="10" Margin="0, 10, 0, 5" HorizontalOptions="Center">
+            <BoxView Grid.Row="1" BackgroundColor="LightGreen"/>
+            <!-- Grille de lignes -->
+            <ScrollView x:Name="LinesView"
+                        Grid.Row="1" BackgroundColor="AliceBlue"
+                        HorizontalOptions="Fill"
+                        VerticalOptions="Fill"
+                        Margin="0"
+                        Orientation="Vertical">
+
+                <CollectionView ItemsSource="{Binding DisplayedLines}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                          Span="6"
+                                          HorizontalItemSpacing="10"
+                                          VerticalItemSpacing="10"/>
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding ImageSource}"
+                                   Aspect="AspectFill"
+                                   Style="{StaticResource SquareImage}">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnLineTapped" CommandParameter="{Binding .}"/>
+                                    </Image.GestureRecognizers>
+                            </Image>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </Grid>
+
+        <Grid x:Name="FavorisGrid" Grid.Row="0" IsVisible="True" Padding="0" BackgroundColor="LightCoral" RowDefinitions="30*,70*">
+            <VerticalStackLayout Grid.Row="0" BackgroundColor="AliceBlue"
+                                  VerticalOptions="Center"
+                                  HorizontalOptions="Center">
+                
+                <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                    <Label x:Name="WeatherIconLabel"
+                           Text="⏳"
+                           FontSize="32"
+                           VerticalOptions="Center"/>
+                    <Label x:Name="WeatherLabel"
+                           Text="Chargement..."
+                           FontSize="20"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+                <Label Text="Bruxelles"
+                       FontSize="20"
+                       HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+            
+            <Border Grid.Row="1"
+                    Margin="20, 10"
+                    Stroke="DarkGray"
+                    StrokeThickness="2"
+                    StrokeShape="RoundRectangle 12"
+                    BackgroundColor="LightGreen">
+                <CollectionView HorizontalOptions="Fill" VerticalOptions="Fill">
+
+                </CollectionView>
+            </Border>
+        </Grid>
+
+        <HorizontalStackLayout Grid.Row="1" Spacing="10" Margin="0, 10, 0, 5" HorizontalOptions="Center">
             <Button Text="Fav" Clicked="OnFavClicked"/>
             <Button Text="Lignes" Clicked="OnLignesClicked"/>
         </HorizontalStackLayout>
-        
+
     </Grid>
 </ContentPage>
