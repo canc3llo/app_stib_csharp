@@ -59,6 +59,10 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </ScrollView>
+
+            <local:LineDetailsPopup x:Name="LineDetailsPanel"
+                                     Grid.Row="0" Grid.RowSpan="2"
+                                     IsVisible="False"/>
         </Grid>
 
         <Grid x:Name="FavorisGrid" Grid.Row="0" IsVisible="True" Padding="0" BackgroundColor="LightCoral" RowDefinitions="30*,70*">

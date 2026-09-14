@@ -21,18 +21,16 @@ public class StopResult
 
     [JsonPropertyName("passingtimes")]
     public string PassingTimesRaw { get; set; } = "";
+
+    public List<DateTimeOffset> ExpectedArrivalTime { get; set; } = new();
+
+    public string StopName { get; set; } = "";
 }
 
-public class PassingTime
+public class PassingTimeRaw
 {
-    [JsonPropertyName("destination")]
-    public Destination Destination { get; set; } = new();
-
     [JsonPropertyName("expectedArrivalTime")]
     public DateTimeOffset ExpectedArrivalTime { get; set; }
-
-    [JsonPropertyName("lineId")]
-    public string LineId { get; set; } = "";
 }
 
 public class Destination
@@ -69,4 +67,52 @@ public class StopName
 
     [JsonPropertyName("nl")]
     public string Nl { get; set; } = "";
+}
+
+public class StopsByLineResponse
+{
+    [JsonPropertyName("results")]
+    public List<StopsByLineResult> Results { get; set; } = new();
+}
+
+public class StopsByLineResult
+{
+    [JsonPropertyName("lineid")]
+    public string LineId { get; set; } = "";
+
+    [JsonPropertyName("direction")]
+    public string Direction { get; set; } = "";
+
+    [JsonPropertyName("destination")]
+    public string DestinationRaw { get; set; } = "";
+
+    [JsonPropertyName("points")]
+    public string PointsRaw { get; set; } = "";
+}
+
+public class RoutePoint
+{
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = "";
+
+    [JsonPropertyName("order")]
+    public int Order { get; set; }
+}
+
+public class LineRoute
+{
+    public string Direction { get; set; } = "";
+    public string Destination { get; set; } = "";
+    public List<RouteStop> Stops { get; set; } = new();
+}
+
+public class RouteStop
+{
+    public string Id { get; set; } = "";
+    public string Name { get; set; } = "";
+    public int Order { get; set; }
+    public bool IsTerminus { get; set; }
+    public List<DateTimeOffset> Times { get; set; } = new();
+    public string Time1 { get; set; } = "";
+    public string Time2 { get; set; } = "";
 }

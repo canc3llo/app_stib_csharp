@@ -1,5 +1,4 @@
 ﻿using System.Text.Json;
-using CommunityToolkit.Maui.Extensions;
 
 namespace maui_app;
 
@@ -51,15 +50,13 @@ public partial class MainPage : ContentPage
         _ => "🌡️"
     };
 
-    private async void OnLineTapped(object sender, TappedEventArgs e)
+    private void OnLineTapped(object sender, TappedEventArgs e)
     {
         if (e.Parameter is not TransportIndex line)
-            return; // pour l'instant, seule la ligne 1 ouvre le panneau
+            return;
 
-        var popup = new LineDetailsPopup(line);
-        popup.CloseRequested += async (_, _) => await this.ClosePopupAsync();
-
-        await this.ShowPopupAsync(popup);
+        LineDetailsPanel.SetLine(line);
+        LineDetailsPanel.IsVisible = true;
     }
 
     private void OnAllClicked(object sender, EventArgs e) => _linesRepresent.ShowAll();
@@ -78,48 +75,4 @@ public partial class MainPage : ContentPage
         FavorisGrid.IsVisible = true;
         LinesGrid.IsVisible = false;
     }
-
-    /*
-    private async void OnGetWaitingTimesClicked(object? sender, EventArgs e)
-    {
-        using var client = new HttpClient();
-
-        // Appel 1 : temps d'attente
-        string waitingUrl = "https://api-management-discovery-production.azure-api.net/api/datasets/stibmivb/rt/WaitingTimes";
-        string waitingJson = await client.GetStringAsync(waitingUrl);
-        var waitingData = JsonSerializer.Deserialize<WaitingTimeResponse>(waitingJson);
-
-        // Appel 2 : détails des arrêts (noms)
-        string detailsUrl = "https://api-management-discovery-production.azure-api.net/api/datasets/stibmivb/static/StopDetails";
-        string detailsJson = await client.GetStringAsync(detailsUrl);
-        var detailsData = JsonSerializer.Deserialize<StopDetailsResponse>(detailsJson);
-
-        if (waitingData?.Results != null && detailsData?.Results != null)
-        {
-            var premierArret = waitingData.Results[1];
-            string? nomArret;
-
-            // On cherche le détail correspondant via le pointid
-            var detail = detailsData.Results.FirstOrDefault(d => d.Id == premierArret.PointId);
-            if (detail != null)
-            {
-                nomArret = JsonSerializer.Deserialize<StopName>(detail.NameRaw)?.Fr;
-            }
-            else
-            {
-                nomArret = "Arrêt inconnu";
-            }
-
-            var passages = JsonSerializer.Deserialize<List<PassingTime>>(premierArret.PassingTimesRaw);
-
-            if (passages != null && passages.Count > 0)
-            {
-                var premierPassage = passages[0];
-                //ResultLabel.Text = $"{nomArret} — Ligne {premierArret.LineId} vers {premierPassage.Destination.Fr} : {premierPassage.ExpectedArrivalTime:HH:mm}";
-            }
-            
-        }
-        
-    }
-    */
 }

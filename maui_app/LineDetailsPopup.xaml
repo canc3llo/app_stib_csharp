@@ -1,33 +1,123 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:maui_app"
              x:Class="maui_app.LineDetailsPopup"
              HorizontalOptions="Fill"
-             VerticalOptions="End"
-             BackgroundColor="White"
-             Padding="20">
+             VerticalOptions="Fill"
+             BackgroundColor="Brown"
+             Padding="0">
 
-    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-        <Label x:Name="TitleLabel"
-               Grid.Row="0" Grid.Column="0"
-               FontSize="22"
-               FontAttributes="Bold"
-               VerticalOptions="Center"/>
+    <Grid RowDefinitions="Auto,*">
+        <Grid Grid.Row="0" ColumnDefinitions="*, auto" BackgroundColor="BlueViolet">
+            <Image Grid.Column="0"
+                   x:Name="TitleImage"
+                   HeightRequest="50"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   Margin="5"/>
+            
+            <HorizontalStackLayout Grid.Column="1"
+                                   Spacing="5"
+                                   VerticalOptions="Center"
+                                   Margin="5">
+                <Button Text="🔃"
+                        Clicked="OnSwapDirectionClicked"
+                        BackgroundColor="Red"
+                        TextColor="Black"
+                        FontSize="22"
+                        Padding="0"
+                        WidthRequest="40"
+                        HeightRequest="40"/>
+            
+                <Button Text="❤️"
+                        Clicked="OnCloseClicked"
+                        BackgroundColor="DodgerBlue"
+                        TextColor="Black"
+                        FontSize="22"
+                        Padding="0"
+                        WidthRequest="40"
+                        HeightRequest="40"/>
 
-        <Button Grid.Row="0" Grid.Column="1"
-                Text="✕"
-                Clicked="OnCloseClicked"
-                BackgroundColor="Transparent"
-                TextColor="Black"
-                FontSize="18"
-                Padding="0"
-                WidthRequest="40"
-                HeightRequest="40"/>
+                <Button Text="✕"
+                        Clicked="OnCloseClicked"
+                        BackgroundColor="YellowGreen"
+                        TextColor="Black"
+                        FontSize="22"
+                        Padding="0"
+                        WidthRequest="40"
+                        HeightRequest="40"/>
+            </HorizontalStackLayout>
+        </Grid>
 
-        <Label x:Name="DetailsLabel"
-               Grid.Row="1" Grid.ColumnSpan="2"
-               Margin="0, 15, 0, 0"
-               FontSize="16"/>
+        <Grid Grid.Row="1" RowDefinitions="Auto,*" BackgroundColor="White">
+            <Label x:Name="DirectionLabel"
+                   Grid.Row="0"
+                   Text=""
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   BackgroundColor="YellowGreen"
+                   Padding="12,8"/>
+
+            <CollectionView Grid.Row="1"
+                             ItemsSource="{Binding Stops}"
+                             BackgroundColor="White">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="local:RouteStop">
+                        <Grid ColumnDefinitions="5*,55*,40*" Padding="5,0">
+                            <Grid Grid.Column="0" HorizontalOptions="Center" HeightRequest="40" BackgroundColor="Aqua">
+                                <BoxView WidthRequest="4"
+                                         Color="Red"
+                                         VerticalOptions="Fill"
+                                         HorizontalOptions="Center"/>
+                                <Ellipse WidthRequest="14"
+                                         HeightRequest="14"
+                                         Fill="White"
+                                         Stroke="Red"
+                                         StrokeThickness="3"
+                                         HorizontalOptions="Center"
+                                         VerticalOptions="Center">
+                                    <Ellipse.Triggers>
+                                        <DataTrigger TargetType="Ellipse" Binding="{Binding IsTerminus}" Value="True">
+                                            <Setter Property="WidthRequest" Value="20"/>
+                                            <Setter Property="HeightRequest" Value="20"/>
+                                            <Setter Property="Fill" Value="White"/>
+                                        </DataTrigger>
+                                    </Ellipse.Triggers>
+                                </Ellipse>
+                            </Grid>
+
+                            <Label Grid.Column="1" BackgroundColor="RosyBrown"
+                                   Text="{Binding Name}"
+                                   FontSize="16"
+                                   VerticalOptions="Center"
+                                   Margin="10,0,0,0">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label" Binding="{Binding IsTerminus}" Value="True">
+                                        <Setter Property="FontAttributes" Value="Bold"/>
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            
+                            <HorizontalStackLayout Grid.Column="2" BackgroundColor="Silver"
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Center"
+                                                   Margin="0,0">
+                                <Label
+                                    Text="{Binding Time1}"
+                                    Margin="15,0">
+                                </Label>
+                                <Label
+                                    Text="{Binding Time2}"
+                                    Margin="15,0">
+                                </Label>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
     </Grid>
 
 </ContentView>
