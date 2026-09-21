@@ -5,40 +5,34 @@
              x:Class="maui_app.MainPage">
 
 <ContentPage.Resources>
-    <Style x:Key="SquareImage" TargetType="Image">
-        <Setter Property="HorizontalOptions" Value="Fill"/>
-        <Setter Property="VerticalOptions" Value="Fill"/>
-        <Style.Behaviors>
-            <local:SquareBehavior/>
-        </Style.Behaviors>
-    </Style>
+    <local:CellSizeConverter x:Key="CellSizeConverter"/>
 </ContentPage.Resources>
 
-    <Grid Padding="20, 10, 20, 0" RowDefinitions="*,Auto">
-        <Grid x:Name="LinesGrid" Grid.Row="0" IsVisible="False" Padding="0" BackgroundColor="LightCoral" RowDefinitions="Auto,*">
+    <Grid x:Name="MainGrid" Padding="0, 0, 0, 0" RowDefinitions="*,Auto" SafeAreaEdges="None" BackgroundColor="#0077c0">
+        <Grid x:Name="LinesGrid" Grid.Row="0" IsVisible="False" Padding="0" RowDefinitions="Auto,*" SafeAreaEdges="None">
 
-            <BoxView Grid.Row="0" BackgroundColor="LightBlue"/>
+            <Border Grid.Row="0" BackgroundColor="#0077c0" Stroke="Transparent" StrokeThickness="0" Padding="0"/>
             <!-- Menu de filtre -->
-            <HorizontalStackLayout x:Name="FilterMenu"
-                                   Grid.Row="0" Spacing="10"
-                                   Margin="0, 10"
-                                   HorizontalOptions="Center">
-                <Button Text="Tous" Clicked="OnAllClicked"/>
-                <Button Text="Bus" Clicked="OnBusClicked"/>
-                <Button Text="Tram" Clicked="OnTramClicked"/>
-                <Button Text="Métro" Clicked="OnMetroClicked"/>
-            </HorizontalStackLayout>
+            <Grid x:Name="FilterMenu"
+                  Grid.Row="0"
+                  ColumnDefinitions="*,*,*,*"
+                  ColumnSpacing="0">
+                <Button Grid.Column="0" Text="Tous" FontSize="18" Clicked="OnAllClicked" HorizontalOptions="Fill" BackgroundColor="Transparent" HeightRequest="65"/>
+                <Button Grid.Column="1" Text="Bus" FontSize="18" Clicked="OnBusClicked" HorizontalOptions="Fill" BackgroundColor="Transparent" HeightRequest="65"/>
+                <Button Grid.Column="2" Text="Tram" FontSize="18" Clicked="OnTramClicked" HorizontalOptions="Fill" BackgroundColor="Transparent" HeightRequest="65"/>
+                <Button Grid.Column="3" Text="Métro" FontSize="18" Clicked="OnMetroClicked" HorizontalOptions="Fill" BackgroundColor="Transparent" HeightRequest="65"/>
+            </Grid>
 
-            <BoxView Grid.Row="1" BackgroundColor="LightGreen"/>
+            <Border Grid.Row="1" BackgroundColor="White"/>
             <!-- Grille de lignes -->
             <ScrollView x:Name="LinesView"
-                        Grid.Row="1" BackgroundColor="AliceBlue"
+                        Grid.Row="1"
                         HorizontalOptions="Fill"
                         VerticalOptions="Fill"
-                        Margin="0"
+                        Margin="20, 1"
                         Orientation="Vertical">
 
-                <CollectionView ItemsSource="{Binding DisplayedLines}">
+                <CollectionView x:Name="LinesCollection" ItemsSource="{Binding DisplayedLines}">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical"
                                           Span="6"
@@ -50,7 +44,8 @@
                         <DataTemplate>
                             <Image Source="{Binding ImageSource}"
                                    Aspect="AspectFill"
-                                   Style="{StaticResource SquareImage}">
+                                   WidthRequest="{Binding Source={x:Reference LinesCollection}, Path=Width, Converter={StaticResource CellSizeConverter}, ConverterParameter='6:10'}"
+                                   HeightRequest="{Binding Source={x:Reference LinesCollection}, Path=Width, Converter={StaticResource CellSizeConverter}, ConverterParameter='6:10'}">
                                     <Image.GestureRecognizers>
                                         <TapGestureRecognizer Tapped="OnLineTapped" CommandParameter="{Binding .}"/>
                                     </Image.GestureRecognizers>
@@ -59,14 +54,10 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </ScrollView>
-
-            <local:LineDetailsPopup x:Name="LineDetailsPanel"
-                                     Grid.Row="0" Grid.RowSpan="2"
-                                     IsVisible="False"/>
         </Grid>
 
-        <Grid x:Name="FavorisGrid" Grid.Row="0" IsVisible="True" Padding="0" BackgroundColor="LightCoral" RowDefinitions="30*,70*">
-            <VerticalStackLayout Grid.Row="0" BackgroundColor="AliceBlue"
+        <Grid x:Name="FavorisGrid" Grid.Row="0" IsVisible="True" Padding="0" RowDefinitions="30*,70*">
+            <VerticalStackLayout Grid.Row="0"
                                   VerticalOptions="Center"
                                   HorizontalOptions="Center">
                 
@@ -74,33 +65,77 @@
                     <Label x:Name="WeatherIconLabel"
                            Text="⏳"
                            FontSize="32"
-                           VerticalOptions="Center"/>
+                           VerticalOptions="Center"
+                           TextColor="White"/>
                     <Label x:Name="WeatherLabel"
                            Text="Chargement..."
                            FontSize="20"
-                           VerticalOptions="Center"/>
+                           VerticalOptions="Center"
+                           TextColor="White"/>
                 </HorizontalStackLayout>
                 <Label Text="Bruxelles"
                        FontSize="20"
-                       HorizontalOptions="Center"/>
+                       HorizontalOptions="Center"
+                       TextColor="White"/>
             </VerticalStackLayout>
             
             <Border Grid.Row="1"
                     Margin="20, 10"
-                    Stroke="DarkGray"
-                    StrokeThickness="2"
                     StrokeShape="RoundRectangle 12"
-                    BackgroundColor="LightGreen">
-                <CollectionView HorizontalOptions="Fill" VerticalOptions="Fill">
+                    BackgroundColor="White">
+                <CollectionView x:Name="FavorisCollection" ItemsSource="{Binding FavoritesLines}" Margin="10">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical"
+                                         Span="5"
+                                         HorizontalItemSpacing="10"
+                                         VerticalItemSpacing="10"/>
+                    </CollectionView.ItemsLayout>
 
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding ImageSource}"
+                                   Aspect="AspectFill"
+                                   WidthRequest="{Binding Source={x:Reference FavorisCollection}, Path=Width, Converter={StaticResource CellSizeConverter}, ConverterParameter='5:10'}"
+                                   HeightRequest="{Binding Source={x:Reference FavorisCollection}, Path=Width, Converter={StaticResource CellSizeConverter}, ConverterParameter='5:10'}">
+                                <Image.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnLineTapped" CommandParameter="{Binding .}"/>
+                                </Image.GestureRecognizers>
+                            </Image>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
                 </CollectionView>
             </Border>
+            
         </Grid>
-
-        <HorizontalStackLayout Grid.Row="1" Spacing="10" Margin="0, 10, 0, 5" HorizontalOptions="Center">
-            <Button Text="Fav" Clicked="OnFavClicked"/>
-            <Button Text="Lignes" Clicked="OnLignesClicked"/>
+        
+        <HorizontalStackLayout Grid.Row="1" Spacing="30" Margin="0, 10, 0, 5" HorizontalOptions="Center">
+            <Border x:Name="FavorisBtn" StrokeShape="RoundRectangle 12" WidthRequest="70" HeightRequest="70" BackgroundColor="White">
+                <VerticalStackLayout Spacing="2" 
+                                     HorizontalOptions="Center" 
+                                     VerticalOptions="Center">
+                    <Label Text="❤" FontSize="26" HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Label Text="Favoris" FontSize="14" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFavClicked" />
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
+            </Border>
+            
+            <Border x:Name="LignesBtn" StrokeShape="RoundRectangle 12" WidthRequest="70" HeightRequest="70" BackgroundColor="LightGray">
+                <VerticalStackLayout Spacing="2" 
+                                     HorizontalOptions="Center" 
+                                     VerticalOptions="Center">
+                    <Label Text="🚉" FontSize="26" HorizontalOptions="Center" />
+                    <Label Text="Lignes" FontSize="14" HorizontalOptions="Center" />
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLignesClicked" />
+                    </VerticalStackLayout.GestureRecognizers>
+                </VerticalStackLayout>
+            </Border>
         </HorizontalStackLayout>
-
+        
+        <local:LineDetailsPopup x:Name="LineDetailsPanel"
+                                Grid.Row="0" Grid.RowSpan="2"
+                                IsVisible="False"/>
     </Grid>
 </ContentPage>

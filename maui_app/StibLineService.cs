@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Diagnostics;
 
 namespace maui_app;
 
@@ -58,11 +59,16 @@ public class StibLineService
     
     public async Task<List<StopResult>> StopTime(int lineNr)
     {
-        await EnsureLoadedAsync();
+        await EnsureLoadedAsync(); // garantit que _stopNames (bibliothèque) est chargé au moins une fois
+
+        // Les temps d'attente sont du temps réel : on les recharge à chaque appel,
+        // contrairement à _stopsByLine/_stopNames qui restent en cache (données statiques).
+        WaitingTimeResponse reponseTemps = await _httpClient.GetFromJsonAsync<WaitingTimeResponse>(TimeByStopUrl);
+        _stopTimes = reponseTemps?.Results ?? new List<StopResult>();
+
         string lineId = lineNr.ToString();
-       // return _stopTimes!.Where(r => r.LineId == lineId).ToList();
-        
-        return _stopTimes!
+
+        return _stopTimes
             .Where(r => r.LineId == lineId)
             .Select(BuildTime)
             .ToList();
@@ -144,15 +150,24 @@ public class StibLineService
         {
             string name;
             bool trouve = _stopNames.TryGetValue(p.Id, out name);
+            
+            //Debug.WriteLine($"Id: {p.Id} -> trouvé: {trouve}, name: {name}");
 
             if (!trouve)
             {
                 name = "?";
             }
 
+            string id_new = p.Id;
+
+            if (id_new.Length > 0 && char.IsLetter(id_new[^1]))
+            {
+                id_new = id_new[..^1];
+            }
+
             RouteStop stop = new RouteStop
             {
-                Id = p.Id,
+                Id = id_new,
                 Order = p.Order,
                 Name = name
             };

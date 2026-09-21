@@ -5,7 +5,7 @@ public class TransportIndex
     public int Nr { get; set; }
     public string? ImageSource { get; set; }
     public TransportType Type { get; set; }
-
+    public bool IsFavorite { get; set; }
 }
 
 public enum TransportType

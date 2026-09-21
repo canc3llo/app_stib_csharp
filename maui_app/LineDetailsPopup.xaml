@@ -5,14 +5,15 @@
              x:Class="maui_app.LineDetailsPopup"
              HorizontalOptions="Fill"
              VerticalOptions="Fill"
-             BackgroundColor="Brown"
              Padding="0">
 
     <Grid RowDefinitions="Auto,*">
-        <Grid Grid.Row="0" ColumnDefinitions="*, auto" BackgroundColor="BlueViolet">
+        <Grid Grid.Row="0" ColumnDefinitions="*, auto" BackgroundColor="#0077c0" SafeAreaEdges="None">
             <Image Grid.Column="0"
                    x:Name="TitleImage"
                    HeightRequest="50"
+                   WidthRequest="50"
+                   Aspect="AspectFit"
                    VerticalOptions="Center"
                    HorizontalOptions="Start"
                    Margin="5"/>
@@ -21,32 +22,40 @@
                                    Spacing="5"
                                    VerticalOptions="Center"
                                    Margin="5">
+                <Border StrokeShape="RoundRectangle 12">
                 <Button Text="🔃"
                         Clicked="OnSwapDirectionClicked"
-                        BackgroundColor="Red"
+                        BackgroundColor="White"
                         TextColor="Black"
-                        FontSize="22"
+                        FontSize="24"
                         Padding="0"
                         WidthRequest="40"
                         HeightRequest="40"/>
+                </Border>
             
-                <Button Text="❤️"
-                        Clicked="OnCloseClicked"
-                        BackgroundColor="DodgerBlue"
+                <Border StrokeShape="RoundRectangle 12">
+                <Button x:Name="btnfavoris"
+                        Text="❤️"
+                        Clicked="OnFavorisClicked"
+                        BackgroundColor="White"
                         TextColor="Black"
-                        FontSize="22"
+                        FontSize="24"
                         Padding="0"
                         WidthRequest="40"
                         HeightRequest="40"/>
-
+                </Border>
+                
+                <Border StrokeShape="RoundRectangle 12">
                 <Button Text="✕"
                         Clicked="OnCloseClicked"
-                        BackgroundColor="YellowGreen"
+                        BackgroundColor="White"
+                        FontAttributes="Bold"
                         TextColor="Black"
-                        FontSize="22"
+                        FontSize="24"
                         Padding="0"
                         WidthRequest="40"
                         HeightRequest="40"/>
+                </Border>
             </HorizontalStackLayout>
         </Grid>
 
@@ -57,7 +66,7 @@
                    FontSize="16"
                    FontAttributes="Bold"
                    TextColor="White"
-                   BackgroundColor="YellowGreen"
+                   BackgroundColor="#0077c0"
                    Padding="12,8"/>
 
             <CollectionView Grid.Row="1"
@@ -65,8 +74,8 @@
                              BackgroundColor="White">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="local:RouteStop">
-                        <Grid ColumnDefinitions="5*,55*,40*" Padding="5,0">
-                            <Grid Grid.Column="0" HorizontalOptions="Center" HeightRequest="40" BackgroundColor="Aqua">
+                        <Grid ColumnDefinitions="5*,55*,40*" Padding="10,0">
+                            <Grid Grid.Column="0" HorizontalOptions="Center" HeightRequest="40">
                                 <BoxView WidthRequest="4"
                                          Color="Red"
                                          VerticalOptions="Fill"
@@ -88,7 +97,7 @@
                                 </Ellipse>
                             </Grid>
 
-                            <Label Grid.Column="1" BackgroundColor="RosyBrown"
+                            <Label Grid.Column="1"
                                    Text="{Binding Name}"
                                    FontSize="16"
                                    VerticalOptions="Center"
@@ -100,7 +109,7 @@
                                 </Label.Triggers>
                             </Label>
                             
-                            <HorizontalStackLayout Grid.Column="2" BackgroundColor="Silver"
+                            <HorizontalStackLayout Grid.Column="2"
                                                    VerticalOptions="Center"
                                                    HorizontalOptions="Center"
                                                    Margin="0,0">

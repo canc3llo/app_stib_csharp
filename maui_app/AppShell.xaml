@@ -5,7 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:maui_app"
     Title="maui_app"
-    Shell.BackgroundColor="Blue"
+    Shell.BackgroundColor="#0077c0"
     Shell.ForegroundColor="White"
     Shell.TitleColor="White"
     Shell.NavBarIsVisible="False">

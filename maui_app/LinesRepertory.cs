@@ -1,9 +1,13 @@
 using System.Collections.ObjectModel;
+using System.Text.Json;
 
 namespace maui_app;
 
 public class LinesRepertory
 {
+    public ObservableCollection<TransportIndex> FavoritesLines { get; set; } = new();
+    private readonly string cheminFichier = Path.Combine(FileSystem.AppDataDirectory, "favoris.json");
+    
     private static readonly int[] LineNumbers =
     {
         1, 2, 4, 5, 6, 7, 8, 9, 10, 12,
@@ -31,7 +35,8 @@ public class LinesRepertory
             ImageSource = $"line_{nr}",
             Type = TramNumbers.Contains(nr) ? TransportType.Tram
                 : MetroNumbers.Contains(nr) ? TransportType.Metro
-                : TransportType.Bus
+                : TransportType.Bus,
+            IsFavorite = false
         })
         .ToList();
     
@@ -39,6 +44,7 @@ public class LinesRepertory
     
     public LinesRepertory()
     {
+        ChargerFavoris();
         ShowAll();
     }
 
@@ -54,5 +60,50 @@ public class LinesRepertory
             DisplayedLines.Add(line);
     }
     
-    
+    public void SauvegarderFavoris(TransportIndex newFavorite)
+    {
+        FavoritesLines.Add(newFavorite);
+        string json = JsonSerializer.Serialize(FavoritesLines);
+        File.WriteAllText(cheminFichier, json);
+    }
+
+    public void ChargerFavoris()
+    {
+        if (File.Exists(cheminFichier))
+        {
+            string json = File.ReadAllText(cheminFichier);
+            var items = JsonSerializer.Deserialize<List<TransportIndex>>(json) ?? new();
+            FavoritesLines.Clear();
+            foreach (var item in items)
+            {
+                item.IsFavorite = true;
+                FavoritesLines.Add(item);
+            }
+        }
+    }
+
+    public void ViderFavoris()
+    {
+        FavoritesLines.Clear();
+
+        foreach (var line in _allLines)
+            line.IsFavorite = false;
+
+        string json = JsonSerializer.Serialize(FavoritesLines);
+        File.WriteAllText(cheminFichier, json);
+    }
+
+    public void RetirerFavori(TransportIndex line)
+    {
+        var favori = FavoritesLines.FirstOrDefault(f => f.Nr == line.Nr && f.Type == line.Type);
+        if (favori != null)
+            FavoritesLines.Remove(favori);
+
+        var ligneRepertoriee = _allLines.FirstOrDefault(l => l.Nr == line.Nr && l.Type == line.Type);
+        if (ligneRepertoriee != null)
+            ligneRepertoriee.IsFavorite = false;
+
+        string json = JsonSerializer.Serialize(FavoritesLines);
+        File.WriteAllText(cheminFichier, json);
+    }
 }

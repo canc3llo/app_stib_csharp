@@ -12,6 +12,7 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         _linesRepresent = new LinesRepertory();
         BindingContext = _linesRepresent;
+        LineDetailsPanel.FavorisManager = _linesRepresent;
         _weatherService = new WeatherService(); // 1) créer l'instance
         LoadWeather();                           // 2) déclencher l'appel
     }
@@ -22,7 +23,7 @@ public partial class MainPage : ContentPage
 
         if (weather != null)
         {
-            WeatherLabel.Text = $"{weather.Current.Temperature2m}°C";
+            WeatherLabel.Text = $"{weather.Current.Temperature2m:F0}°C";
             WeatherIconLabel.Text = GetWeatherIcon(weather.Current.WeatherCode);
         }
         else
@@ -68,11 +69,15 @@ public partial class MainPage : ContentPage
     {
         FavorisGrid.IsVisible = false;
         LinesGrid.IsVisible = true;
+        FavorisBtn.BackgroundColor = Colors.LightGray;
+        LignesBtn.BackgroundColor = Colors.White;
     }
 
     private void OnFavClicked(object sender, EventArgs e)
     {
         FavorisGrid.IsVisible = true;
         LinesGrid.IsVisible = false;
+        FavorisBtn.BackgroundColor = Colors.White;
+        LignesBtn.BackgroundColor = Colors.LightGray;
     }
 }
